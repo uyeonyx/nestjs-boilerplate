@@ -25,6 +25,34 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Environment Variables
+
+이 애플리케이션은 다음 환경변수들을 사용합니다:
+
+### 기본 설정
+- `PORT`: 서버 포트 (기본값: 3000)
+
+### 데이터베이스 설정
+- `DATABASE_HOST`: 데이터베이스 호스트
+- `DATABASE_PORT`: 데이터베이스 포트 (기본값: 5432)
+
+### JWT 설정
+- `JWT_SECRET`: JWT 서명을 위한 비밀키 (기본값: 'your-secret-key')
+- `JWT_EXPIRES_IN`: JWT 만료 시간 (기본값: '1d')
+
+### Rate Limiting 설정
+- `THROTTLE_TTL`: 제한 시간 (밀리초, 기본값: 60000)
+- `THROTTLE_LIMIT`: 제한 시간 내 최대 요청 수 (기본값: 100)
+
+### CORS 설정
+- `CORS_ORIGIN`: 허용할 원본 도메인 (쉼표로 구분, 기본값: 'http://localhost:3000')
+- `CORS_CREDENTIALS`: 자격 증명 포함 여부 (기본값: false)
+- `CORS_METHODS`: 허용할 HTTP 메서드 (기본값: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS')
+- `CORS_ALLOWED_HEADERS`: 허용할 헤더 (기본값: 'Content-Type, Accept, Authorization')
+
+### 보안 설정
+- `HELMET_ENABLED`: Helmet 보안 헤더 활성화 여부 (기본값: true)
+
 ## Project setup
 
 ```bash

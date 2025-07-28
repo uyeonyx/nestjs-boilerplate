@@ -12,4 +12,15 @@ export default () => ({
     ttl: parseInt(process.env.THROTTLE_TTL || '60000', 10), // 1분
     limit: parseInt(process.env.THROTTLE_LIMIT || '100', 10), // 1분당 100회
   },
+  cors: {
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000'],
+    credentials: process.env.CORS_CREDENTIALS === 'true',
+    methods: process.env.CORS_METHODS || 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: process.env.CORS_ALLOWED_HEADERS || 'Content-Type, Accept, Authorization',
+  },
+  security: {
+    helmet: {
+      enabled: process.env.HELMET_ENABLED !== 'false', // 기본값: true
+    },
+  },
 });
