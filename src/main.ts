@@ -4,9 +4,12 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { ZodValidationPipe } from './common/pipes/validation.pipe';
+import { PinoLoggerService } from './common/logger/pino-logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new PinoLoggerService(),
+  });
 
   // 전역 설정
   app.useGlobalFilters(new HttpExceptionFilter());
