@@ -2,7 +2,7 @@ import { Controller, Get, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AppService } from './app.service';
-import { Public } from '../../common/decorators/public.decorator';
+import { Public } from '../common/decorators/public.decorator';
 import { SkipThrottle } from '@nestjs/throttler';
 import { HealthCheckDto } from './dto/health-check.dto';
 

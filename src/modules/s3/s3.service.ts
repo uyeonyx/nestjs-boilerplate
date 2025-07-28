@@ -94,7 +94,7 @@ export class S3Service {
 
       await this.s3Client.send(command);
       return true;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }

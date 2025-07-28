@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as os from 'os';
 import * as process from 'process';
 import { HealthCheckDto } from './dto/health-check.dto';
-import { PackageUtil } from '../../common/utils/package.util';
+import { PackageUtil } from '../common/utils/package.util';
 
 @Injectable()
 export class AppService {
