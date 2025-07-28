@@ -8,7 +8,6 @@ export interface JwtPayload {
   email?: string;
   username?: string;
   roles?: string[];
-  admin?: boolean; // 관리자 권한
   iat?: number;
   exp?: number;
   [key: string]: any; // 추가 클레임들을 위한 확장 가능한 구조

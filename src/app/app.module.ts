@@ -4,6 +4,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from '../common/middleware/logger.middleware';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { PrismaModule } from '../modules/prisma/prisma.module';
 import { RedisModule } from '../modules/redis/redis.module';
 import { S3Module } from '../modules/s3/s3.module';
@@ -29,6 +30,10 @@ import { SchedulerModule } from '../modules/scheduler/scheduler.module';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
