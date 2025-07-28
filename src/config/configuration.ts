@@ -1,5 +1,3 @@
-import { registerAs } from '@nestjs/config';
-
 export default () => ({
   port: parseInt(process.env.PORT || '3000', 10),
   database: {
@@ -9,5 +7,9 @@ export default () => ({
   jwt: {
     secret: process.env.JWT_SECRET || 'your-secret-key',
     expiresIn: process.env.JWT_EXPIRES_IN || '1d',
+  },
+  throttle: {
+    ttl: parseInt(process.env.THROTTLE_TTL || '60000', 10), // 1분
+    limit: parseInt(process.env.THROTTLE_LIMIT || '100', 10), // 1분당 100회
   },
 });
