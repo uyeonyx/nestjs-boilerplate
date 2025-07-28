@@ -7,7 +7,6 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PinoLoggerService } from './common/logger/pino-logger.service';
-import { HealthCheckDto } from './modules/app/dto/health-check.dto';
 import { PackageUtil } from './common/utils/package.util';
 import { SwaggerUtil } from './common/utils/swagger.util';
 
@@ -22,7 +21,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // Swagger 설정
-  SwaggerUtil.setupDefault(app, [HealthCheckDto]);
+  SwaggerUtil.setupDefault(app, []);
 
   // 보안 헤더 설정 (Helmet)
   if (configService.get('security.helmet.enabled')) {
