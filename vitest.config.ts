@@ -12,6 +12,9 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'dist/', 'test/', '**/*.d.ts'],
     },
+    deps: {
+      external: ['express'],
+    },
   },
   plugins: [
     swc.vite({
@@ -23,4 +26,4 @@ export default defineConfig({
       '@': './src',
     },
   },
-}); 
+});

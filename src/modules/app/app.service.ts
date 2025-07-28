@@ -2,16 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as os from 'os';
 import * as process from 'process';
+import { HealthCheckDto } from './dto/health-check.dto';
+import { PackageUtil } from '../../common/utils/package.util';
 
 @Injectable()
 export class AppService {
   constructor(private readonly configService: ConfigService) {}
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
-  getHealthCheck() {
+  getHealthCheck(): HealthCheckDto {
     const now = new Date();
     const uptime = process.uptime();
 
@@ -23,7 +21,7 @@ export class AppService {
         formatted: this.formatUptime(uptime),
       },
       environment: process.env.NODE_ENV || 'development',
-      version: process.env.npm_package_version || '1.0.0',
+      version: PackageUtil.getVersion(),
       memory: {
         used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
         total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
@@ -41,10 +39,10 @@ export class AppService {
         memoryUnit: 'MB',
       },
       config: {
-        port: this.configService.get<number>('port'),
+        port: this.configService.get<number>('port') ?? 3000,
         corsEnabled: !!this.configService.get('cors.origin'),
-        helmetEnabled: this.configService.get<boolean>('security.helmet.enabled'),
-        throttleLimit: this.configService.get<number>('throttle.limit'),
+        helmetEnabled: this.configService.get<boolean>('security.helmet.enabled') ?? true,
+        throttleLimit: this.configService.get<number>('throttle.limit') ?? 100,
       },
     };
   }

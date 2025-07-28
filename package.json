@@ -1,17 +1,16 @@
 {
-  "name": "nestjs-boilerplate",
-  "version": "0.0.1",
-  "description": "",
+  "name": "nestjs-api",
+  "version": "1.0.0",
+  "description": "NestJS API 애플리케이션\\n\\n이 API는 다음 기능을 제공합니다:\\n- 헬스체크 엔드포인트\\n- Zod 스키마 유효성 검증\\n- JWT 인증\\n- 로깅 및 보안 헤더\\n- Swagger API 문서화",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start": "node dist/main",
+    "dev": "nest start --watch",
+    "debug": "nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "vitest",
     "test:watch": "vitest --watch",
@@ -20,19 +19,23 @@
     "test:e2e": "vitest --config ./test/vitest-e2e.config.ts"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^8.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.2.0",
     "@nestjs/throttler": "^6.4.0",
     "helmet": "^8.1.0",
+    "nestjs-zod": "^4.3.1",
     "pino": "^9.7.0",
     "pino-http": "^10.5.0",
     "pino-pretty": "^13.0.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "zod": "^4.0.10"
+    "swagger-ui-express": "^5.0.1",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -64,5 +67,5 @@
     "unplugin-swc": "^1.5.5",
     "vitest": "^3.2.4"
   },
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
+  "packageManager": "pnpm@10.13.1"
 }
