@@ -1,126 +1,201 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Boilerplate
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+현대적인 백엔드 개발을 위한 NestJS 보일러플레이트입니다. PostgreSQL, Redis, S3(Minio)를 통합한 완전한 개발 환경을 제공합니다.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 주요 기능
 
-## Description
+- **NestJS 11** - 최신 버전의 NestJS 프레임워크
+- **TypeScript** - 타입 안전성과 개발 생산성 향상
+- **Prisma** - 현대적인 데이터베이스 ORM
+- **Redis** - 고성능 캐싱 및 세션 저장소
+- **S3 (Minio)** - 파일 저장소 (로컬 개발용 Minio)
+- **Zod** - 스키마 유효성 검증
+- **Swagger** - 자동 API 문서화
+- **Docker Compose** - 개발 환경 컨테이너화
+- **JWT 인증** - 토큰 기반 인증 시스템
+- **Rate Limiting** - API 호출 제한
+- **보안 헤더** - Helmet을 통한 보안 강화
+- **로깅** - Pino를 통한 구조화된 로깅
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📋 요구사항
 
-## Environment Variables
+- Node.js 18+
+- pnpm
+- Docker & Docker Compose
 
-이 애플리케이션은 다음 환경변수들을 사용합니다:
+## 🛠️ 설치 및 실행
+
+### 1. 프로젝트 클론 및 의존성 설치
+
+```bash
+git clone <repository-url>
+cd nestjs-boilerplate
+pnpm install
+```
+
+### 2. 개발 환경 설정
+
+```bash
+# Docker 서비스 실행 (PostgreSQL, Redis, Minio)
+pnpm run docker:dev
+
+# Prisma 클라이언트 생성
+pnpm run prisma:generate
+
+# 데이터베이스 스키마 적용
+pnpm run prisma:push
+```
+
+### 3. 애플리케이션 실행
+
+```bash
+# 개발 모드
+pnpm run dev
+
+# 프로덕션 빌드
+pnpm run build
+pnpm run start
+```
+
+## 🌐 접속 정보
+
+애플리케이션이 실행되면 다음 URL에서 접속할 수 있습니다:
+
+- **API 서버**: http://localhost:3000
+- **Swagger 문서**: http://localhost:3000/docs
+- **Minio 웹 콘솔**: http://localhost:9001 (minioadmin/minioadmin)
+
+## 🧪 CRUD 테스트
+
+프로젝트에는 Prisma, Redis, S3의 기본 CRUD 기능을 테스트할 수 있는 API가 포함되어 있습니다.
+
+### Prisma (PostgreSQL) 테스트
+- `POST /test/items` - 아이템 생성
+- `GET /test/items` - 모든 아이템 조회
+- `GET /test/items/:id` - 아이템 상세 조회
+- `PUT /test/items/:id` - 아이템 수정
+- `DELETE /test/items/:id` - 아이템 삭제
+
+### Redis 캐시 테스트
+- `POST /test/cache` - 캐시 저장
+- `GET /test/cache/:key` - 캐시 조회
+- `DELETE /test/cache/:key` - 캐시 삭제
+
+### S3 파일 저장소 테스트
+- `POST /test/files/:filename` - 파일 업로드 (multipart/form-data)
+- `GET /test/files/:filename` - 파일 다운로드
+- `DELETE /test/files/:filename` - 파일 삭제
+
+모든 테스트 API는 Swagger 문서에서 직접 실행해볼 수 있습니다.
+
+## ⚙️ 환경 변수
+
+프로젝트는 다음 환경 변수를 사용합니다:
 
 ### 기본 설정
 - `PORT`: 서버 포트 (기본값: 3000)
 
 ### 데이터베이스 설정
-- `DATABASE_HOST`: 데이터베이스 호스트
+- `DATABASE_URL`: PostgreSQL 연결 URL
+- `DATABASE_HOST`: 데이터베이스 호스트 (기본값: localhost)
 - `DATABASE_PORT`: 데이터베이스 포트 (기본값: 5432)
 
+### Redis 설정
+- `REDIS_HOST`: Redis 호스트 (기본값: localhost)
+- `REDIS_PORT`: Redis 포트 (기본값: 6379)
+- `REDIS_PASSWORD`: Redis 비밀번호 (선택사항)
+- `REDIS_DB`: Redis 데이터베이스 번호 (기본값: 0)
+
+### S3/Minio 설정
+- `S3_ENDPOINT`: S3 엔드포인트 URL (기본값: http://localhost:9000)
+- `S3_REGION`: S3 리전 (기본값: us-east-1)
+- `S3_ACCESS_KEY_ID`: S3 액세스 키 ID (기본값: minioadmin)
+- `S3_SECRET_ACCESS_KEY`: S3 시크릿 액세스 키 (기본값: minioadmin)
+- `S3_BUCKET`: 기본 S3 버킷명 (기본값: nestjs-bucket)
+
 ### JWT 설정
-- `JWT_SECRET`: JWT 서명을 위한 비밀키 (기본값: 'your-secret-key')
-- `JWT_EXPIRES_IN`: JWT 만료 시간 (기본값: '1d')
+- `JWT_SECRET`: JWT 서명을 위한 비밀키
+- `JWT_EXPIRES_IN`: JWT 만료 시간 (기본값: 1d)
 
 ### Rate Limiting 설정
-- `THROTTLE_TTL`: 제한 시간 (밀리초, 기본값: 60000)
+- `THROTTLE_TTL`: 제한 시간 밀리초 (기본값: 60000)
 - `THROTTLE_LIMIT`: 제한 시간 내 최대 요청 수 (기본값: 100)
 
 ### CORS 설정
-- `CORS_ORIGIN`: 허용할 원본 도메인 (쉼표로 구분, 기본값: 'http://localhost:3000')
+- `CORS_ORIGIN`: 허용할 원본 도메인 (쉼표로 구분)
 - `CORS_CREDENTIALS`: 자격 증명 포함 여부 (기본값: false)
-- `CORS_METHODS`: 허용할 HTTP 메서드 (기본값: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS')
-- `CORS_ALLOWED_HEADERS`: 허용할 헤더 (기본값: 'Content-Type, Accept, Authorization')
+- `CORS_METHODS`: 허용할 HTTP 메서드
+- `CORS_ALLOWED_HEADERS`: 허용할 헤더
 
 ### 보안 설정
 - `HELMET_ENABLED`: Helmet 보안 헤더 활성화 여부 (기본값: true)
 
-## Project setup
+## 📜 사용 가능한 스크립트
 
 ```bash
-$ pnpm install
+# 개발
+pnpm run dev              # 개발 모드로 실행
+pnpm run debug            # 디버그 모드로 실행
+
+# 빌드 및 실행
+pnpm run build            # 프로덕션 빌드
+pnpm run start            # 프로덕션 모드로 실행
+
+# 테스트
+pnpm run test             # 단위 테스트
+pnpm run test:watch       # 테스트 감시 모드
+pnpm run test:cov         # 테스트 커버리지
+pnpm run test:e2e         # E2E 테스트
+
+# 코드 품질
+pnpm run lint             # ESLint 실행
+pnpm run format           # Prettier로 코드 포맷팅
+
+# 데이터베이스
+pnpm run prisma:generate  # Prisma 클라이언트 생성
+pnpm run prisma:push      # 스키마를 데이터베이스에 적용
+pnpm run prisma:migrate   # 마이그레이션 생성 및 실행
+pnpm run prisma:studio    # Prisma Studio 실행
+
+# Docker
+pnpm run docker:dev       # 개발용 서비스 실행
+pnpm run docker:down      # Docker 서비스 중지
 ```
 
-## Compile and run the project
+## 🏗️ 프로젝트 구조
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```
+src/
+├── common/                 # 공통 유틸리티
+│   ├── decorators/        # 커스텀 데코레이터
+│   ├── filters/           # 예외 필터
+│   ├── guards/            # 가드
+│   ├── interceptors/      # 인터셉터
+│   ├── middleware/        # 미들웨어
+│   ├── pipes/             # 파이프
+│   └── utils/             # 유틸리티 함수
+├── config/                # 설정 파일
+├── modules/               # 기능별 모듈
+│   ├── app/              # 메인 앱 모듈
+│   ├── prisma/           # Prisma 모듈
+│   ├── redis/            # Redis 모듈
+│   ├── s3/               # S3 모듈
+│   └── test/             # CRUD 테스트 모듈
+└── main.ts               # 애플리케이션 진입점
 ```
 
-## Run tests
+## 🔧 기술 스택
 
-```bash
-# unit tests
-$ pnpm run test
+- **Backend**: NestJS, TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **Cache**: Redis
+- **File Storage**: AWS S3 (Minio for development)
+- **Validation**: Zod
+- **Documentation**: Swagger/OpenAPI
+- **Testing**: Vitest
+- **Containerization**: Docker & Docker Compose
+- **Code Quality**: ESLint, Prettier
 
-# e2e tests
-$ pnpm run test:e2e
+## 📝 라이센스
 
-# test coverage
-$ pnpm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+이 프로젝트는 MIT 라이센스 하에 배포됩니다.

@@ -1,8 +1,22 @@
 export default () => ({
   port: parseInt(process.env.PORT || '3000', 10),
   database: {
+    url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/nestjs_dev',
     host: process.env.DATABASE_HOST,
     port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+  },
+  redis: {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT || '6379', 10),
+    password: process.env.REDIS_PASSWORD,
+    db: parseInt(process.env.REDIS_DB || '0', 10),
+  },
+  s3: {
+    endpoint: process.env.S3_ENDPOINT || 'http://localhost:9000',
+    region: process.env.S3_REGION || 'us-east-1',
+    accessKeyId: process.env.S3_ACCESS_KEY_ID || 'minioadmin',
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || 'minioadmin',
+    bucket: process.env.S3_BUCKET || 'nestjs-bucket',
   },
   jwt: {
     secret: process.env.JWT_SECRET || 'your-secret-key',
