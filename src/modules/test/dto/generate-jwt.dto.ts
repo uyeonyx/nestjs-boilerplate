@@ -10,4 +10,4 @@ export const GenerateJwtSchema = z.object({
   roles: z.array(z.string()).optional().describe('권한 목록'),
 });
 
-export class GenerateJwtDto extends createZodDto(GenerateJwtSchema) {} 
+export class GenerateJwtDto extends createZodDto(GenerateJwtSchema) {}

@@ -12,6 +12,7 @@ import { WebsocketModule } from '../modules/websocket/websocket.module';
 import { ConfigModule } from '../modules/config/config.module';
 import { ThrottlerModule } from '../modules/throttler/throttler.module';
 import { AuthModule } from '../modules/auth/auth.module';
+import { SchedulerModule } from '../modules/scheduler/scheduler.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthModule } from '../modules/auth/auth.module';
     S3Module,
     TestModule,
     WebsocketModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [
