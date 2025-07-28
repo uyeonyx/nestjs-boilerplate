@@ -19,8 +19,10 @@ export default () => ({
     bucket: process.env.S3_BUCKET || 'nestjs-bucket',
   },
   jwt: {
-    secret: process.env.JWT_SECRET || 'your-secret-key',
+    secret: process.env.JWT_SECRET || 'your-jwt-secret-key-change-in-production',
     expiresIn: process.env.JWT_EXPIRES_IN || '1d',
+    issuer: process.env.JWT_ISSUER, // JWT 발급자 (선택사항)
+    audience: process.env.JWT_AUDIENCE, // JWT 대상 (선택사항)
   },
   throttle: {
     ttl: parseInt(process.env.THROTTLE_TTL || '60000', 10), // 1분

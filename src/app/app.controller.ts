@@ -1,10 +1,12 @@
 import { Controller, Get, Res } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags, ApiOkResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AppService } from './app.service';
 import { Public } from '../common/decorators/public.decorator';
 import { SkipThrottle } from '@nestjs/throttler';
 import { HealthCheckDto } from './dto/health-check.dto';
+import { User } from '../common/decorators/user.decorator';
+import { JwtPayload } from '../modules/auth/strategies/jwt.strategy';
 
 @ApiTags('Application')
 @Controller()
@@ -51,5 +53,43 @@ export class AppController {
   })
   getHealth(): HealthCheckDto {
     return this.appService.getHealthCheck();
+  }
+
+  @Get('profile')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: '사용자 프로필 조회',
+    description: 'JWT 토큰을 통해 인증된 사용자의 프로필 정보를 반환합니다.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '사용자 프로필 정보',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', description: '응답 메시지' },
+        user: {
+          type: 'object',
+          properties: {
+            sub: { type: 'string', description: '사용자 ID' },
+            email: { type: 'string', description: '이메일' },
+            username: { type: 'string', description: '사용자명' },
+            roles: { type: 'array', items: { type: 'string' }, description: '권한 목록' },
+            iat: { type: 'number', description: '토큰 발급 시간' },
+            exp: { type: 'number', description: '토큰 만료 시간' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: '인증되지 않은 요청',
+  })
+  getProfile(@User() user: JwtPayload) {
+    return {
+      message: '인증된 사용자 정보',
+      user,
+    };
   }
 }

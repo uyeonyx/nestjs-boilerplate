@@ -11,9 +11,19 @@ import { TestModule } from '../modules/test/test.module';
 import { WebsocketModule } from '../modules/websocket/websocket.module';
 import { ConfigModule } from '../modules/config/config.module';
 import { ThrottlerModule } from '../modules/throttler/throttler.module';
+import { AuthModule } from '../modules/auth/auth.module';
 
 @Module({
-  imports: [ConfigModule, ThrottlerModule, PrismaModule, RedisModule, S3Module, TestModule, WebsocketModule],
+  imports: [
+    ConfigModule,
+    ThrottlerModule,
+    AuthModule,
+    PrismaModule,
+    RedisModule,
+    S3Module,
+    TestModule,
+    WebsocketModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

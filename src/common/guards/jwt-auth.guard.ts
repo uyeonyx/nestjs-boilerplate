@@ -1,12 +1,15 @@
-import { Injectable, ExecutionContext, CanActivate } from '@nestjs/common';
+import { Injectable, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
-export class JwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  constructor(private reflector: Reflector) {
+    super();
+  }
 
-  canActivate(context: ExecutionContext): boolean {
+  canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -16,8 +19,6 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
-    // TODO: JWT 토큰 검증 로직 구현
-    // 현재는 모든 요청을 허용
-    return true;
+    return super.canActivate(context);
   }
 }

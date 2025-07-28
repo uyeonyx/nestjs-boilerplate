@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
 import { S3Service } from '../s3/s3.service';
 import { CreateItemDto } from './dto/create-item.dto';
+import { GenerateJwtDto } from './dto/generate-jwt.dto';
 
 @Injectable()
 export class TestService {
@@ -10,7 +12,18 @@ export class TestService {
     private prisma: PrismaService,
     private redis: RedisService,
     private s3: S3Service,
+    private jwtService: JwtService,
   ) {}
+
+  // JWT 토큰 생성 (테스트용)
+  generateJwtToken(payload: GenerateJwtDto) {
+    const token = this.jwtService.sign(payload);
+    return {
+      access_token: token,
+      payload,
+      message: '테스트용 JWT 토큰이 생성되었습니다.',
+    };
+  }
 
   // Prisma 테스트
   async createItem(data: CreateItemDto) {
