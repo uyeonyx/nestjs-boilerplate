@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웹소켓 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        input, button {
+            padding: 8px 12px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .log {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f8f9fa;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>웹소켓 테스트 페이지</h1>
+        
+        <div id="status" class="status disconnected">연결 안됨</div>
+        
+        <div class="section">
+            <h3>연결 관리</h3>
+            <button id="connectBtn">연결</button>
+            <button id="disconnectBtn" disabled>연결 해제</button>
+        </div>
+
+        <div class="section">
+            <h3>메시지 보내기</h3>
+            <input type="text" id="messageInput" placeholder="메시지를 입력하세요" disabled>
+            <button id="sendBtn" disabled>메시지 전송</button>
+        </div>
+
+        <div class="section">
+            <h3>방 관리</h3>
+            <input type="text" id="roomInput" placeholder="방 이름을 입력하세요" disabled>
+            <button id="joinRoomBtn" disabled>방 입장</button>
+            <button id="leaveRoomBtn" disabled>방 나가기</button>
+            <br><br>
+            <input type="text" id="roomMessageInput" placeholder="방 메시지를 입력하세요" disabled>
+            <button id="sendRoomMessageBtn" disabled>방 메시지 전송</button>
+        </div>
+
+        <div class="section">
+            <h3>로그</h3>
+            <button id="clearLogBtn">로그 지우기</button>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+        let socket = null;
+        let currentRoom = null;
+
+        const statusDiv = document.getElementById('status');
+        const logDiv = document.getElementById('log');
+        const connectBtn = document.getElementById('connectBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const roomInput = document.getElementById('roomInput');
+        const joinRoomBtn = document.getElementById('joinRoomBtn');
+        const leaveRoomBtn = document.getElementById('leaveRoomBtn');
+        const roomMessageInput = document.getElementById('roomMessageInput');
+        const sendRoomMessageBtn = document.getElementById('sendRoomMessageBtn');
+        const clearLogBtn = document.getElementById('clearLogBtn');
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateUI(connected) {
+            if (connected) {
+                statusDiv.textContent = '연결됨';
+                statusDiv.className = 'status connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                roomInput.disabled = false;
+                joinRoomBtn.disabled = false;
+                leaveRoomBtn.disabled = false;
+                roomMessageInput.disabled = false;
+                sendRoomMessageBtn.disabled = false;
+            } else {
+                statusDiv.textContent = '연결 안됨';
+                statusDiv.className = 'status disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+                roomInput.disabled = true;
+                joinRoomBtn.disabled = true;
+                leaveRoomBtn.disabled = true;
+                roomMessageInput.disabled = true;
+                sendRoomMessageBtn.disabled = true;
+            }
+        }
+
+        connectBtn.addEventListener('click', () => {
+            socket = io('http://localhost:3000');
+            
+            socket.on('connect', () => {
+                log('서버에 연결되었습니다');
+                updateUI(true);
+            });
+
+            socket.on('disconnect', () => {
+                log('서버와 연결이 끊어졌습니다');
+                updateUI(false);
+            });
+
+            socket.on('response', (data) => {
+                log(`응답: ${data}`);
+            });
+
+            socket.on('broadcast', (data) => {
+                log(`브로드캐스트: ${data}`);
+            });
+
+            socket.on('joined-room', (data) => {
+                log(`방 입장: ${data}`);
+                currentRoom = roomInput.value;
+            });
+
+            socket.on('left-room', (data) => {
+                log(`방 나가기: ${data}`);
+                currentRoom = null;
+            });
+
+            socket.on('user-joined', (data) => {
+                log(`사용자 입장: ${data}`);
+            });
+
+            socket.on('user-left', (data) => {
+                log(`사용자 나가기: ${data}`);
+            });
+
+            socket.on('room-message', (data) => {
+                log(`방 메시지 [${data.room}] ${data.sender}: ${data.message}`);
+            });
+        });
+
+        disconnectBtn.addEventListener('click', () => {
+            if (socket) {
+                socket.disconnect();
+                socket = null;
+                updateUI(false);
+            }
+        });
+
+        sendBtn.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message && socket) {
+                socket.emit('message', message);
+                log(`메시지 전송: ${message}`);
+                messageInput.value = '';
+            }
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+
+        joinRoomBtn.addEventListener('click', () => {
+            const room = roomInput.value.trim();
+            if (room && socket) {
+                socket.emit('join-room', room);
+                log(`방 입장 요청: ${room}`);
+            }
+        });
+
+        leaveRoomBtn.addEventListener('click', () => {
+            if (currentRoom && socket) {
+                socket.emit('leave-room', currentRoom);
+                log(`방 나가기 요청: ${currentRoom}`);
+            }
+        });
+
+        sendRoomMessageBtn.addEventListener('click', () => {
+            const message = roomMessageInput.value.trim();
+            if (message && currentRoom && socket) {
+                socket.emit('room-message', { room: currentRoom, message });
+                log(`방 메시지 전송 [${currentRoom}]: ${message}`);
+                roomMessageInput.value = '';
+            }
+        });
+
+        roomMessageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendRoomMessageBtn.click();
+            }
+        });
+
+        clearLogBtn.addEventListener('click', () => {
+            logDiv.innerHTML = '';
+        });
+
+        // 초기 UI 상태 설정
+        updateUI(false);
+    </script>
+</body>
+</html> 

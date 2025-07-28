@@ -9,6 +9,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { RedisModule } from '../redis/redis.module';
 import { S3Module } from '../s3/s3.module';
 import { TestModule } from '../test/test.module';
+import { WebsocketModule } from '../websocket/websocket.module';
 import configuration from '../../config/configuration';
 
 @Module({
@@ -33,6 +34,7 @@ import configuration from '../../config/configuration';
     RedisModule,
     S3Module,
     TestModule,
+    WebsocketModule,
   ],
   controllers: [AppController],
   providers: [
