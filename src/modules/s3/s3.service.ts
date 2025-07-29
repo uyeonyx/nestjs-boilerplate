@@ -57,6 +57,10 @@ export class S3Service {
     }
   }
 
+  async createBucketIfNotExists(bucket: string): Promise<void> {
+    await this.ensureBucketExists(bucket);
+  }
+
   async downloadFile(bucket: string, key: string): Promise<Buffer> {
     const command = new GetObjectCommand({
       Bucket: bucket,

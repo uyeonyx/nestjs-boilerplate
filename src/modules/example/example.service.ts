@@ -13,7 +13,7 @@ export class ExampleService {
     private s3: S3Service,
   ) {}
 
-  async generateJwtToken(payload: any) {
+  generateJwtToken(payload: any) {
     const token = this.jwtService.sign(payload);
     return { access_token: token };
   }
@@ -71,16 +71,24 @@ export class ExampleService {
   }
 
   async uploadFile(filename: string, file: any) {
-    await this.s3.uploadFile('example-bucket', filename, file.buffer, file.mimetype);
+    const bucketName = 'example-bucket';
+
+    // uploadFile 내부에서 이미 버킷 생성을 처리하므로 별도 처리 불필요
+    await this.s3.uploadFile(bucketName, filename, file.buffer, file.mimetype);
     return {
-      url: `http://localhost:9000/example-bucket/${filename}`,
+      url: `http://localhost:9000/${bucketName}/${filename}`,
       key: filename,
       filename,
     };
   }
 
   async downloadFile(filename: string) {
-    const url = await this.s3.getSignedDownloadUrl('example-bucket', filename);
+    const bucketName = 'example-bucket';
+
+    // 다운로드 전 버킷 존재 보장
+    await this.s3.createBucketIfNotExists(bucketName);
+
+    const url = await this.s3.getSignedDownloadUrl(bucketName, filename);
     return {
       url,
       filename,
@@ -88,7 +96,12 @@ export class ExampleService {
   }
 
   async deleteFile(filename: string) {
-    await this.s3.deleteFile('example-bucket', filename);
+    const bucketName = 'example-bucket';
+
+    // 삭제 전 버킷 존재 보장 (버킷이 없으면 삭제할 것도 없지만 일관성을 위해)
+    await this.s3.createBucketIfNotExists(bucketName);
+
+    await this.s3.deleteFile(bucketName, filename);
     return null;
   }
 }

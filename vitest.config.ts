@@ -12,8 +12,10 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'dist/', 'test/', '**/*.d.ts'],
     },
-    deps: {
-      external: ['express'],
+    server: {
+      deps: {
+        external: ['express'],
+      },
     },
   },
   plugins: [

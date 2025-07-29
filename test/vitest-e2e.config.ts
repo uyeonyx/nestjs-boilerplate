@@ -8,6 +8,7 @@ export default defineConfig({
     root: './',
     include: ['test/**/*.e2e-spec.ts'],
     testTimeout: 30000,
+    pool: 'forks',
   },
   plugins: [
     swc.vite({
