@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { TestService } from './test.service';
+import { ExampleService } from './example.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { SetCacheDto } from './dto/set-cache.dto';
 import { GenerateJwtDto } from './dto/generate-jwt.dto';
@@ -26,26 +26,26 @@ import {
   FileDownloadResponseDto,
   SuccessMessageResponseDto,
   DeleteResponseDto,
-} from './dto/test-response.dto';
+} from './dto/example-response.dto';
 import { ApiErrors } from '../../common/decorators/api-error-responses.decorator';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { Public } from '../../common/decorators/public.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 
-@ApiTags('CRUD 테스트')
+@ApiTags('예제 CRUD')
 @UseGuards(RoleGuard)
 @Roles('admin')
 @ApiBearerAuth()
-@Controller('test')
-export class TestController {
-  constructor(private testService: TestService) {}
+@Controller('example')
+export class ExampleController {
+  constructor(private exampleService: ExampleService) {}
 
   // JWT 토큰 생성 (테스트용)
   @Post('generate-jwt')
   @Public()
   @ApiOperation({
-    summary: 'JWT 토큰 생성 (테스트용)',
-    description: '테스트를 위한 JWT 토큰을 생성합니다. 원하는 페이로드를 입력하여 토큰을 발급받을 수 있습니다.',
+    summary: 'JWT 토큰 생성 (예제용)',
+    description: '예제를 위한 JWT 토큰을 생성합니다. 원하는 페이로드를 입력하여 토큰을 발급받을 수 있습니다.',
   })
   @ApiResponse({
     status: 201,
@@ -54,10 +54,10 @@ export class TestController {
   })
   @ApiErrors({ 400: '잘못된 요청 데이터' })
   generateJwtToken(@Body() payload: GenerateJwtDto) {
-    return this.testService.generateJwtToken(payload);
+    return this.exampleService.generateJwtToken(payload);
   }
 
-  // Prisma 테스트
+  // Prisma 예제
   @Post('items')
   @ApiOperation({
     summary: '아이템 생성 (Prisma)',
@@ -75,7 +75,7 @@ export class TestController {
     409: '이미 존재하는 리소스',
   })
   createItem(@Body() data: CreateItemDto) {
-    return this.testService.createItem(data);
+    return this.exampleService.createItem(data);
   }
 
   @Get('items')
@@ -93,7 +93,7 @@ export class TestController {
     403: '권한 부족 (관리자 권한 필요)',
   })
   getItems() {
-    return this.testService.getItems();
+    return this.exampleService.getItems();
   }
 
   @Get('items/:id')
@@ -113,7 +113,7 @@ export class TestController {
     404: '리소스를 찾을 수 없음',
   })
   getItem(@Param('id', ParseIntPipe) id: number) {
-    return this.testService.getItem(id);
+    return this.exampleService.getItem(id);
   }
 
   @Put('items/:id')
@@ -133,7 +133,7 @@ export class TestController {
     404: '리소스를 찾을 수 없음',
   })
   updateItem(@Param('id', ParseIntPipe) id: number, @Body() data: { name: string }) {
-    return this.testService.updateItem(id, data);
+    return this.exampleService.updateItem(id, data);
   }
 
   @Delete('items/:id')
@@ -152,10 +152,10 @@ export class TestController {
     404: '삭제할 아이템을 찾을 수 없음',
   })
   deleteItem(@Param('id', ParseIntPipe) id: number) {
-    return this.testService.deleteItem(id);
+    return this.exampleService.deleteItem(id);
   }
 
-  // Redis 테스트
+  // Redis 예제
   @Post('cache')
   @ApiOperation({
     summary: '캐시 저장 (Redis)',
@@ -173,7 +173,7 @@ export class TestController {
     409: '이미 존재하는 리소스',
   })
   setCache(@Body() data: SetCacheDto) {
-    return this.testService.setCache(data.key, data.value);
+    return this.exampleService.setCache(data.key, data.value);
   }
 
   @Get('cache/:key')
@@ -191,7 +191,7 @@ export class TestController {
     403: '권한 부족 (관리자 권한 필요)',
   })
   getCache(@Param('key') key: string) {
-    return this.testService.getCache(key);
+    return this.exampleService.getCache(key);
   }
 
   @Delete('cache/:key')
@@ -209,10 +209,10 @@ export class TestController {
     403: '권한 부족 (관리자 권한 필요)',
   })
   deleteCache(@Param('key') key: string) {
-    return this.testService.deleteCache(key);
+    return this.exampleService.deleteCache(key);
   }
 
-  // S3 테스트
+  // S3 예제
   @Post('files/:filename')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({
@@ -243,7 +243,7 @@ export class TestController {
     422: '처리할 수 없는 파일 형식',
   })
   uploadFile(@Param('filename') filename: string, @UploadedFile() file: any) {
-    return this.testService.uploadFile(filename, file);
+    return this.exampleService.uploadFile(filename, file);
   }
 
   @Get('files/:filename')
@@ -263,7 +263,7 @@ export class TestController {
     404: '리소스를 찾을 수 없음',
   })
   downloadFile(@Param('filename') filename: string) {
-    return this.testService.downloadFile(filename);
+    return this.exampleService.downloadFile(filename);
   }
 
   @Delete('files/:filename')
@@ -283,6 +283,6 @@ export class TestController {
     404: '리소스를 찾을 수 없음',
   })
   deleteFile(@Param('filename') filename: string) {
-    return this.testService.deleteFile(filename);
+    return this.exampleService.deleteFile(filename);
   }
 }

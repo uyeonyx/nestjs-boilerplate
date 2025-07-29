@@ -8,7 +8,7 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { PrismaModule } from '../modules/prisma/prisma.module';
 import { RedisModule } from '../modules/redis/redis.module';
 import { S3Module } from '../modules/s3/s3.module';
-import { TestModule } from '../modules/test/test.module';
+import { ExampleModule } from '../modules/example/example.module';
 import { WebsocketModule } from '../modules/websocket/websocket.module';
 import { ConfigModule } from '../modules/config/config.module';
 import { ThrottlerModule } from '../modules/throttler/throttler.module';
@@ -23,7 +23,7 @@ import { SchedulerModule } from '../modules/scheduler/scheduler.module';
     PrismaModule,
     RedisModule,
     S3Module,
-    TestModule,
+    ExampleModule,
     WebsocketModule,
     SchedulerModule,
   ],
