@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { Public } from '../common/decorators/public.decorator';
 import { SkipThrottle } from '@nestjs/throttler';
 import { HealthCheckDto } from './dto/health-check.dto';
+import { HealthCheckResponseDto, ProfileResponseDto } from './dto/app-response.dto';
+import { ApiErrors } from '../common/decorators/api-error-responses.decorator';
 import { User } from '../common/decorators/user.decorator';
 import { JwtPayload } from '../modules/auth/strategies/jwt.strategy';
 
@@ -22,7 +24,7 @@ export class AppController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Pong 응답',
+    description: 'Pong 응답 (인터셉터 우회, 플레인 텍스트)',
     schema: {
       type: 'string',
       example: 'pong',
@@ -42,14 +44,10 @@ export class AppController {
     summary: '서버 헬스체크',
     description: '서버의 상태, 시스템 정보, 메모리 사용량 등을 확인할 수 있는 헬스체크 엔드포인트입니다.',
   })
-  @ApiOkResponse({
-    description: '서버 헬스체크 정보',
-    type: HealthCheckDto,
-  })
   @ApiResponse({
     status: 200,
-    description: '서버 헬스체크 정보',
-    type: HealthCheckDto,
+    description: '서버 헬스체크 정보 (전역 인터셉터에 의해 변환됨)',
+    type: HealthCheckResponseDto,
   })
   getHealth(): HealthCheckDto {
     return this.appService.getHealthCheck();
@@ -63,28 +61,12 @@ export class AppController {
   })
   @ApiResponse({
     status: 200,
-    description: '사용자 프로필 정보',
-    schema: {
-      type: 'object',
-      properties: {
-        message: { type: 'string', description: '응답 메시지' },
-        user: {
-          type: 'object',
-          properties: {
-            sub: { type: 'string', description: '사용자 ID' },
-            email: { type: 'string', description: '이메일' },
-            username: { type: 'string', description: '사용자명' },
-            roles: { type: 'array', items: { type: 'string' }, description: '권한 목록' },
-            iat: { type: 'number', description: '토큰 발급 시간' },
-            exp: { type: 'number', description: '토큰 만료 시간' },
-          },
-        },
-      },
-    },
+    description: '사용자 프로필 정보 (전역 인터셉터에 의해 변환됨)',
+    type: ProfileResponseDto,
   })
-  @ApiResponse({
-    status: 401,
-    description: '인증되지 않은 요청',
+  @ApiErrors({
+    401: '인증되지 않은 요청',
+    403: '권한 부족',
   })
   getProfile(@User() user: JwtPayload) {
     return {
