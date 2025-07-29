@@ -17,6 +17,17 @@ export class PinoLoggerService implements LoggerService {
         },
       },
     });
+
+    // Console override - 모든 console.log를 pino logger로 대체
+    this.overrideConsole();
+  }
+
+  private overrideConsole() {
+    console.log = (...args) => this.logger.info(args.join(' '));
+    console.info = (...args) => this.logger.info(args.join(' '));
+    console.warn = (...args) => this.logger.warn(args.join(' '));
+    console.error = (...args) => this.logger.error(args.join(' '));
+    console.debug = (...args) => this.logger.debug(args.join(' '));
   }
 
   log(message: any, context?: string) {
